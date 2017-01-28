@@ -1,10 +1,16 @@
 console.log("heyo");
 
 var sendNotif = function(msg){
+	console.log(chrome.notifications.create)
 	var notif = chrome.notifications.create('Meme Saved', {
-	      icon: './icon.png',
-	      body: "Saved meme \"" + msg.subject + "\". Go fun yourself. " + msg.imgsrc,
-	      onshow: setTimeout(function(){  chrome.notifications.clear('Meme Saved');}, 3000)
+		  type: 'basic',
+	      iconUrl: './icon.png',
+	      title: 'Saved meme! Go fun yourself.',
+	      message: msg.subject,
+	}, function(){
+		setTimeout(function(){
+			chrome.notifications.clear('Meme Saved');
+		}, 1500)
 	});
 }
 chrome.runtime.onMessage.addListener(function (msg, sender, response) {
@@ -16,10 +22,8 @@ chrome.runtime.onMessage.addListener(function (msg, sender, response) {
 		conflictAction: "overwrite"
 	}, function cb(){
 		console.log("Done.");
+		sendNotif(msg);
 	});
-    
 	response({ok: true});
   }
 });
-
-
